@@ -42,19 +42,22 @@ namespace PDF
 
             //set PDF margin
             var unitCvtr = new PdfUnitConvertor();
-            var margin = new PdfMargins();
-            margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
-            margin.Bottom = margin.Top;
-            margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
-            margin.Right = margin.Left;
-            DrawPageNumber(merged.Pages, margin, 1, merged.Pages.Count);
+            var verticalMargin = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
+            var horizontalMargin = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
+            var margin = new PdfMargins()
+            {
+                Top = verticalMargin,
+                Bottom = verticalMargin,
+                Left = horizontalMargin,
+                Right = horizontalMargin
+            };
 
+            DrawPageNumber(merged.Pages, margin, 1, merged.Pages.Count);
 
             merged.SaveToFile("C:\\!Files\\merged.pdf");
             var finished = DateTime.Now - start;
             //write
             Console.WriteLine($@"Merged total of {fileList.Count} files in {finished.TotalSeconds} seconds");
-
         }
 
         private static void DrawPageNumber(PdfPageCollection pages, PdfMargins margin, int startNumber, int pageCount)
