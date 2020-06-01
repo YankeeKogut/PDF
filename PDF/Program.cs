@@ -17,18 +17,6 @@ namespace PDF
             var fileList = new List<string>();
 
             fileList.AddRange(Directory.GetFiles("C:\\!Files"));
-            //merge
-
-            var format = new PdfStringFormat
-            {
-                LineSpacing = 20f
-            };
-
-            var textLayout = new PdfTextLayout
-            {
-                Break = PdfLayoutBreakType.FitPage,
-                Layout = PdfLayoutType.Paginate
-            };
 
             var start = DateTime.Now;
 
@@ -40,7 +28,6 @@ namespace PDF
 
             docs.ForEach(doc => merged.AppendPage(doc));
 
-            //set PDF margin
             var unitCvtr = new PdfUnitConvertor();
             var verticalMargin = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
             var horizontalMargin = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
@@ -65,14 +52,16 @@ namespace PDF
             var brush = PdfBrushes.Black;
             var pen = new PdfPen(brush, 2f);
             var font = new PdfTrueTypeFont(new Font("Arial", 9f, System.Drawing.FontStyle.Italic), true);
-            var format = new PdfStringFormat(PdfTextAlignment.Right);
+            var format = new PdfStringFormat(PdfTextAlignment.Right)
+            {
+                MeasureTrailingSpaces = true
+            };
             var space = font.Height * 0.75f;
             var x = margin.Left;
 
             foreach (PdfPageBase page in pages)
             {
                 page.Canvas.SetTransparency(1f);
-                format.MeasureTrailingSpaces = true;
                 var width = page.Canvas.ClientSize.Width - margin.Left - margin.Right;
                 var y = page.Canvas.ClientSize.Height - margin.Bottom + space;
                 page.Canvas.DrawLine(pen, x, y, x + width, y);
