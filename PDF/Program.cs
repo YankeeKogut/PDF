@@ -13,12 +13,12 @@ namespace PDF
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            // read
             var fileList = new List<string>();
 
             fileList.AddRange(Directory.GetFiles("C:\\!Files"));
 
             var start = DateTime.Now;
+            
 
             var docs = new List<PdfDocument>();
 
@@ -41,10 +41,11 @@ namespace PDF
 
             DrawPageNumber(merged.Pages, margin, 1, merged.Pages.Count);
 
+            var pageCount = merged.Pages.Count;
             merged.SaveToFile("C:\\!Files\\merged.pdf");
             var finished = DateTime.Now - start;
             //write
-            Console.WriteLine($@"Merged total of {fileList.Count} files in {finished.TotalSeconds} seconds");
+            Console.WriteLine($@"Merged total of {pageCount} pages from {fileList.Count} files in {finished.TotalSeconds} seconds");
         }
 
         private static void DrawPageNumber(PdfPageCollection pages, PdfMargins margin, int startNumber, int pageCount)
@@ -65,10 +66,8 @@ namespace PDF
                 var width = page.Canvas.ClientSize.Width - margin.Left - margin.Right;
                 var y = page.Canvas.ClientSize.Height - margin.Bottom + space;
                 page.Canvas.DrawLine(pen, x, y, x + width, y);
-                y += 1;
                 var numberLabel = $"{startNumber++} of {pageCount}";
                 page.Canvas.DrawString(numberLabel, font, brush, x + width, y, format);
-                page.Canvas.SetTransparency(1);
             }
         }
 
